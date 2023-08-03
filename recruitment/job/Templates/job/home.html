@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Add the necessary CSS and other meta tags here -->
+    <link rel="stylesheet" href="styles.css">
+    <style>
+                    /* Reset some default styling */
+            body, h1, h2, h3, p, ul, li {
+                margin: 0;
+                padding: 0;
+            }
+
+            /* Basic styling for the header */
+            header {
+                background-color: #333;
+                color: white;
+                padding: 10px 0;
+            }
+
+            .container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 0 20px;
+            }
+
+            .logo h1 {
+                font-size: 24px;
+            }
+
+            .menu {
+                list-style: none;
+                display: flex;
+            }
+
+            .menu li {
+                margin-right: 20px;
+            }
+
+            .menu a {
+                text-decoration: none;
+                color: white;
+            }
+
+            /* Styling for the hero section */
+            .hero {
+                background-image: url('hero-image.jpg');
+                background-size: cover;
+                color: white;
+                text-align: center;
+                padding: 150px 0;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+                margin-bottom: 20px;
+            }
+
+            .hero p {
+                font-size: 18px;
+                margin-bottom: 40px;
+            }
+
+            .btn {
+                display: inline-block;
+                background-color: #333;
+                color: white;
+                padding: 10px 20px;
+                text-decoration: none;
+                border-radius: 5px;
+                transition: background-color 0.3s ease;
+            }
+
+            .btn:hover {
+                background-color: #555;
+            }
+
+            /* Styling for the buttons */
+            .show-form-btn {
+                display: block;
+                margin: 20px auto;
+                padding: 10px 20px;
+                background-color: #333;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+
+            /* Styling for the job posting and application forms */
+            .job-posting-form,
+            .candidate-application-form {
+                background-color: #f7f7f7;
+                padding: 20px;
+                margin-bottom: 20px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+            }
+
+            .job-posting-form h2,
+            .candidate-application-form h2 {
+                margin-bottom: 10px;
+            }
+
+            .job-posting-form form,
+            .candidate-application-form form {
+                display: grid;
+                gap: 10px;
+            }
+
+            /* Styling for the featured jobs section */
+            .featured-jobs {
+                margin-top: 50px;
+            }
+
+            .job {
+                background-color: #f7f7f7;
+                padding: 20px;
+                margin-bottom: 20px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+            }
+
+            .job h3 {
+                font-size: 24px;
+                margin-bottom: 10px;
+            }
+
+            .apply-btn {
+                display: inline-block;
+                background-color: #333;
+                color: white;
+                padding: 5px 10px;
+                text-decoration: none;
+                border-radius: 5px;
+                transition: background-color 0.3s ease;
+            }
+
+            .apply-btn:hover {
+                background-color: #555;
+            }
+
+            /* Styling for the footer */
+            footer {
+                background-color: #333;
+                color: white;
+                padding: 10px 0;
+                text-align: center;
+            }
+    </style>
+</head>
+<body>
+    <header>
+        <!-- Add the header content -->
+        <nav>
+            <div class="container">
+                <div class="logo">
+                    <h1>RecruitPro</h1>
+                </div>
+                <ul class="menu">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="">Services</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <!-- Add the content for the hero section -->
+        <section class="hero">
+            <div class="container">
+                <h1>Find Your Dream Team</h1>
+                <p>Hire top talent in software engineering, product management, data science, and more.</p>
+                <a href="#" class="btn">Get Started</a>
+            </div>
+        </section>
+
+        <!-- Add a button to show the Job Posting Form -->
+        <button class="show-form-btn" onclick="toggleForm('job-posting-form')">Post a Job</button>
+
+        <!-- Job Posting Form -->
+        <section class="job-posting-form" style="display: none;">
+            <div class="container">
+                <h2>Post a Job</h2>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ job_form.as_p }}
+                    <button type="submit">Post Job</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Add a button to show the Featured Jobs section -->
+        <button class="show-form-btn" onclick="toggleForm('featured-jobs')">Show Featured Jobs</button>
+
+        <!-- Featured Jobs Section -->
+        <section class="featured-jobs" style="display: none;">
+            <div class="container">
+                <h2>Featured Jobs</h2>
+                {% for job_post in recent_job_postings %}
+                <div class="job">
+                    <h3>{{ job_post.title }}</h3>
+                    <p>{{ job_post.description }}</p>
+                    <p>Skills Required: {{ job_post.skills_required }}</p>
+                    <p>Location: {{ job_post.location }}</p>
+                    <p>Posted Date: {{ job_post.posted_date }}</p>
+                    <p>Salary: {{ job_post.salary }}</p>
+                    <a href="#" class="apply-btn">Apply Now</a>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Add a button to show the Application Form -->
+        <button class="show-form-btn" onclick="toggleForm('candidate-application-form')">Apply for Jobs</button>
+
+        <!-- Application Form -->
+        <section class="candidate-application-form" style="display: none;">
+            <div class="container">
+                <h2>Apply for Jobs</h2>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ application_form.as_p }}
+                    <button type="submit">Apply Now</button>
+                </form>
+            </div>
+        </section>
+        <section class="contact">
+            <div class="container">
+                <h2>Contact Us</h2>
+                <p>If you have any questions, feel free to reach out to us.</p>
+                <p>Email: info@recruitpro.com</p>
+                <p>Phone: +1 (123) 456-7890</p>
+            </div>
+        </section>
+
+        <!-- Add the content for other sections -->
+    </main>
+    <footer>
+        <!-- Add the footer content -->
+        <div class="container">
+            <p>&copy; 2023 Recruitment Startup. All rights reserved.</p>
+        </div>
+
+    </footer>
+
+    <script>
+        function toggleForm(formClassName) {
+            const form = document.querySelector(`.${formClassName}`);
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        }
+    </script>
+</body>
+
+</html>
